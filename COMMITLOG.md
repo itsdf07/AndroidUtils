@@ -7,3 +7,6 @@ add a commit template for committed logs source code changes
 
 the config.build file was added to define some uniform parameters
 添加config.build文件用来定义了一些统一参数
+
+add the lib-alog module
+添加lib-alog模块
