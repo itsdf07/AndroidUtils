@@ -4,3 +4,6 @@ add the COMMITLOG.md file to translate committed logs
 
 add a commit template for committed logs source code changes 
 添加提交日志源代码更改的提交模板
+
+the config.build file was added to define some uniform parameters
+添加config.build文件用来定义了一些统一参数

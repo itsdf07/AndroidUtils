@@ -1,0 +1,30 @@
+/**
+ * ext：扩展内容，固定格式（即只能用ext{}），并且是一个闭包的内容
+ */
+ext {
+    //当前是否为debug模式
+    isDebug = true
+
+    //junitVersion：自定义的属性，下同
+    junitVersion = "4.13.2"
+    //appId：自定义的一个map映射集合，key-value
+    appId = [
+            "app": "top.itaso.app",
+    ]
+    dependencies = [
+            //shell语言语法：${变量名}
+            //单元测试相关
+            "junit": "junit:junit:${junitVersion}",
+    ]
+    android = [
+            compileSdkVersion: 30,
+            buildToolsVersion: "30.0.3",
+            minSdkVersion    : 19,
+            targetSdkVersion : 30,
+            versionCode      : 1,
+            versionName      : "1.0",
+    ]
+
+//testImplementation : 为 test source set 添加依赖
+//androidTestImplementation : 为 androidTest source set 添加依赖
+}

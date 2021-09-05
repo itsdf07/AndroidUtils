@@ -2,17 +2,27 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
 }
+//赋值与引用，def 类型 相当于java中的Object类型，如config是一个map集合对象
+def config = rootProject.ext.android
+def appId = rootProject.ext.appId
+
+println(">>>>>>applicationId：${appId["app"]},versionName：${config.versionName},versionCode：${config.versionCode}")
+println(">>>>>>versionName：${config.versionName},versionCode：${config.versionCode}")
+println(">>>>>>minSdkVersion：${config.minSdkVersion},targetSdkVersion:${config.targetSdkVersion},compileSdkVersion:$config.compileSdkVersion,buildToolsVersion:$config.buildToolsVersion")
+println(">>>>>>kotlin_version：$kotlin_version")
+println(">>>>>>Android Test->junit：$junitVersion")
+println(">>>>>>isDebug：$isDebug")
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdkVersion rootProject.ext.android.compileSdkVersion //map集合取值方式一
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
 
     defaultConfig {
-        applicationId "top.itaso.app"
-        minSdkVersion 19
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        applicationId appId["app"]//map集合取值方式二
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -39,7 +49,35 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    testImplementation 'junit:junit:4.+'
+    //本地化测试 Required -- JUnit 4 framework
+    testImplementation rootProject.ext.dependencies["junit"]
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+}
+
+
+//------------------------------------------
+task asoCustomTask(group: "aso task") {
+    println(">>>>>>这是自定义Task任务，group:\"aso task\"")
+
+
+//  点击左边的三角形进行 run 后会输出如下结果：并且在左侧的打开的 Gradle 窗口中的Task下会生成一个 asotask
+//    > Configure project :app
+//    >>>>>>applicationId：com.itsdf07.cores.app,versionName：1.0,versionCode：1
+//    >>>>>>versionName：1.0,versionCode：1
+//    >>>>>>minSdkVersion：19,targetSdkVersion:30,compileSdkVersion:30,buildToolsVersion:30.0.2
+//    >>>>>>kotlin_version：1.3.72
+//    >>>>>>Android Test->junit：4.13.2
+//    >>>>>>isDebug：true
+//    这是自定义Task任务，group:"aso task"
+//
+//    > Task :app:asoCustomTask
+//    这是自定义Task任务，我是 doFirst
+//    这是自定义Task任务，我是 doLast
+    doFirst {//task真正在执行的时候才会被操作到，doFirst也是一样的
+        println(">>>>>>这是自定义Task任务，我是 doFirst")
+    }
+    doLast {
+        println(">>>>>>这是自定义Task任务，我是 doLast")
+    }
 }
