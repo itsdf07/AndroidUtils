@@ -10,3 +10,6 @@ the config.build file was added to define some uniform parameters
 
 add the lib-alog module
 添加lib-alog模块
+
+implement ALog tool to output logs
+实现ALog工具输出日志
