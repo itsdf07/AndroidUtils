@@ -1,3 +1,13 @@
+==========================================
+日期：xxxx.xx.xx
+    1.xxx
+    2.xxx
+    ...
+==========================================
+2021.09.12
+Added permission prompts when local logs need to be recorded
+增加记录本地日志时的权限提示
+
 2021.09.05
 add the COMMITLOG.md file to translate committed logs
 添加COMMITLOG.md文件翻译提交的日志

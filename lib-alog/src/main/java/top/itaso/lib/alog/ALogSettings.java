@@ -1,6 +1,13 @@
 package top.itaso.lib.alog;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Environment;
+import android.util.Log;
+
+import androidx.core.content.ContextCompat;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -103,9 +110,26 @@ public final class ALogSettings {
      * 设置是否本地保存Log信息
      *
      * @param isLog2Local
+     * @param context     当 isLog2Local = true 时，context 不能为 null ,否则设置无效
      */
-    public ALogSettings setLog2Local(boolean isLog2Local) {
-        this.isLog2Local = isLog2Local;
+    public ALogSettings setLog2Local(boolean isLog2Local, Context context) {
+        if (!isLog2Local) {
+            return this;
+        }
+        if (context == null) {
+            try {
+                throw new Exception("content is not null when isLog2Local is true");
+            } catch (Exception e) {
+                Log.e(TAG, "setLog2Local: >>>>>>e=", e);
+            }
+            return this;
+        }
+        this.isLog2Local = true;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            Log.e(TAG, "setLog2Local: >>>>>>Currently there is no write permission, you can only write after you request it no need to reinitialize it");
+            return this;
+        }
         return this;
     }
 
