@@ -8,6 +8,9 @@
 Added home page with navigation drawer
 添加了带有导航抽屉的主页
 
+Added the initial Settings page in the navigation drawer
+在导航抽屉中新增初始设置页
+
 2021.09.12
 Added permission prompts when local logs need to be recorded
 增加记录本地日志时的权限提示
