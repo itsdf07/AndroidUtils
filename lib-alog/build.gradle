@@ -26,6 +26,14 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    //aar 打包主要是下面这一段，并在 Terminal 中执行 ./gradlew :lib-alog:assembleRelease
+    android.libraryVariants.all { variant ->
+        variant.outputs.all {
+            //输出目录：lib-alog/build/outputs/aar/
+            outputFileName = "lib-alog-${rootProject.ext.android.versionName}" + '.aar'
+        }
+    }
 }
 
 dependencies {

@@ -8,6 +8,9 @@
 Provides the function of saving crash logs to the local
 提供保存崩溃日志到本地的功能
 
+Provide gradle to package modules to aar
+提供gradle将模块打包到aar
+
 2021.9.13
 Added home page with navigation drawer
 添加了带有导航抽屉的主页
