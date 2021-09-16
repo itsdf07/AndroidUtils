@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.core.content.ContextCompat;
@@ -44,7 +45,7 @@ public final class ALogSettings {
      * 默认Log本地文件存储路径
      * Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
      */
-    private final String defaultALogFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
+    private final String defaultRootPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
 
     /**
      * 自定义Log本地存储路径：需指向写入文件，如:xxx/xxx/xxx.log
@@ -72,11 +73,11 @@ public final class ALogSettings {
 
     private ALogAdapterImpl aLogAdapter;
 
-    public String getAlogRoot() {
+    String getAlogRoot() {
         return alogRoot;
     }
 
-    public String getTag() {
+    String getTag() {
         return TAG;
     }
 
@@ -87,11 +88,8 @@ public final class ALogSettings {
      * @return
      */
     public ALogSettings setTag(String tag) {
-        if (null == tag) {
-            throw new NullPointerException("TAG 不能设置 null");
-        }
-        if (tag.trim().length() == 0) {
-            throw new IllegalStateException("TAG 不能设置为空字符串");
+        if (TextUtils.isEmpty(tag)) {
+            throw new NullPointerException("TAG 不能设置空字符串或者null");
         }
         this.TAG = tag;
         return this;
@@ -107,18 +105,33 @@ public final class ALogSettings {
     }
 
     /**
-     * 设置是否本地保存Log信息
+     * 开启异常崩溃捕获
      *
-     * @param isLog2Local
-     * @param context     当 isLog2Local = true 时，context 不能为 null ,否则设置无效
+     * @param context
      */
-    public ALogSettings setLog2Local(boolean isLog2Local, Context context) {
-        if (!isLog2Local) {
+    public ALogSettings writeCrash(Context context) {
+        if (context != null) {
+            CrashHandler.getInstance().init(context);
+        } else {
+            try {
+                throw new Exception("content is not null when you want writeCrash");
+            } catch (Exception e) {
+                Log.e(TAG, "setLog2Local: >>>>>>e=", e);
+            }
             return this;
         }
+        return this;
+    }
+
+    /**
+     * 设置是否本地保存Log信息
+     *
+     * @param context 当 isLog2Local = true 时，context 不能为 null ,否则设置无效
+     */
+    public ALogSettings writeLog(Context context) {
         if (context == null) {
             try {
-                throw new Exception("content is not null when isLog2Local is true");
+                throw new Exception("content is not null when you want writeLog");
             } catch (Exception e) {
                 Log.e(TAG, "setLog2Local: >>>>>>e=", e);
             }
@@ -138,14 +151,24 @@ public final class ALogSettings {
      *
      * @return
      */
-    public String getDefaultALogFilePath() {
+    String getDefaultALogFilePath() {
         Date now = new Date();
         String date = mSimpleDateFormat.format(now);
-        return defaultALogFilePath + getAlogRoot() + File.separator + date + ".log";
+        return defaultRootPath + getAlogRoot() + File.separator + date + ".log";
     }
 
-    public String getDefineALogFilePath() {
+    String getDefineALogFilePath() {
         return defineALogFilePath;
+    }
+
+    String getAlogRootPath() {
+        //如果用户没有自定义log的存储路径，则使用默认
+        File file = FileUtils.getFileByPath(defineALogFilePath);
+        if (file != null) {
+            return file.getParent() + File.separator;
+        } else {
+            return defaultRootPath + getAlogRoot() + File.separator;
+        }
     }
 
     /**
@@ -154,7 +177,12 @@ public final class ALogSettings {
      * @param defineALogFilePath xxx/xxx/xxx.log
      */
     public ALogSettings setDefineALogFilePath(String defineALogFilePath) {
-        this.defineALogFilePath = defineALogFilePath;
+        if (!TextUtils.isEmpty(defineALogFilePath)) {
+            File file = FileUtils.getFileByPath(defineALogFilePath);
+            if (file != null) {
+                this.defineALogFilePath = defineALogFilePath;
+            }
+        }
         return this;
     }
 
@@ -163,7 +191,7 @@ public final class ALogSettings {
      *
      * @return false：不显示线程信息，即只打印内容
      */
-    public boolean isShowThreadInfo() {
+    boolean isShowThreadInfo() {
         return isShowThreadInfo;
     }
 
@@ -194,7 +222,7 @@ public final class ALogSettings {
         return this;
     }
 
-    public int getMethodCount() {
+    int getMethodCount() {
         return methodCount;
     }
 
@@ -208,7 +236,7 @@ public final class ALogSettings {
         return this;
     }
 
-    public int getMethodOffset() {
+    int getMethodOffset() {
         return methodOffset;
     }
 

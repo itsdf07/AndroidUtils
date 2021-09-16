@@ -4,6 +4,10 @@
     2.xxx
     ...
 ==========================================
+2021.9.16
+Provides the function of saving crash logs to the local
+提供保存崩溃日志到本地的功能
+
 2021.09.12
 Added permission prompts when local logs need to be recorded
 增加记录本地日志时的权限提示
