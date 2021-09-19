@@ -4,6 +4,10 @@
     2.xxx
     ...
 ==========================================
+2021.9.19
+add the lib-net module
+添加lib-net模块
+
 2021.9.16
 Provides the function of saving crash logs to the local
 提供保存崩溃日志到本地的功能

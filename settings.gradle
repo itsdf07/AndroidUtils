@@ -1,3 +1,4 @@
+include ':lib-net'
 include ':lib-alog'
 include ':app'
 rootProject.name = "AndroidUtils"
