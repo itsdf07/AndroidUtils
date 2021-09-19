@@ -5,8 +5,8 @@
     ...
 ==========================================
 2021.9.19
-add the lib-net module
-添加lib-net模块
+Implement the network request capability of the lib-net module
+实现了 lib-net 模块的网络请求能力
 
 2021.9.16
 Provides the function of saving crash logs to the local
