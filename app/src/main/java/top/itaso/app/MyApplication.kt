@@ -15,12 +15,9 @@ import top.itaso.lib.net.NetInit
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        ALog.init().logLevel=ALogLevel.FULL
+        ALog.init().logLevel = ALogLevel.FULL
         NetInit.init(this)
             .withApiHost("https://cloudvc.tpv-tech.com")
-            .withInterceptParams {
-                return@withInterceptParams HashMap()
-            }
             .showLog(true).configure()
     }
 }

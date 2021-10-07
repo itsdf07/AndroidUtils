@@ -1,11 +1,10 @@
 package top.itaso.lib.net.rtf2;
 
-
-
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import top.itaso.lib.net.ConfigKeys;
@@ -29,7 +28,7 @@ public final class NetCreator {
         private static final Retrofit RETROFIT_CLIENT = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(ScalarsConverterFactory.create())
-                .client(OKHttpHolder.OK_HTTP_CLIENT)//不使用默认的OK3，那么就自行重新设置设置okhttp
+                .client(OKHttpHolder.getOkHttpClient())//不使用默认的OK3，那么就自行重新设置设置okhttp
                 .build();
     }
 
@@ -38,13 +37,25 @@ public final class NetCreator {
      */
     private static final class OKHttpHolder {
         private static final int TIME_OUT = 30;
-        private static final OkHttpClient OK_HTTP_CLIENT = new OkHttpClient.Builder()
-                .connectTimeout(TIME_OUT, TimeUnit.SECONDS)//设置请求超时时间
+//        private static final OkHttpClient OK_HTTP_CLIENT = new OkHttpClient.Builder()
+//                .connectTimeout(TIME_OUT, TimeUnit.SECONDS)//设置请求超时时间
 //                .addInterceptor(new HeadInterceptor())//请求头拦截器，可用于改写请求协议头的数据
 //                .addInterceptor(new BodyInterceptor())//请求体拦截器，可用于改写body协议中的数据
 //                .addInterceptor(new RetryInterceptor())//设置重定向拦截器，需要时开启使用
-                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))//打印okhttp请求体日志
-                .build();
+//                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))//打印okhttp请求体日志
+//                .build();
+
+        static final OkHttpClient getOkHttpClient() {
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            builder.connectTimeout(TIME_OUT, TimeUnit.SECONDS);//设置请求超时时间
+            if (NetInit.getConfiguration(ConfigKeys.INTERCEPTOR.name()) != null){
+                for (Interceptor interceptor : (ArrayList<Interceptor>) NetInit.getConfiguration(ConfigKeys.INTERCEPTOR.name())) {
+                    builder.addInterceptor(interceptor);
+                }
+            }
+
+            return builder.build();
+        }
     }
 
     //提供接口让调用者得到retrofit对象

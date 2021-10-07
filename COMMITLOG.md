@@ -4,6 +4,10 @@
     2.xxx
     ...
 ==========================================
+2021.10.7
+Allows to add interceptors
+允许添加多个自定义拦截器
+
 2021.9.19
 Implement the network request capability of the lib-net module
 实现了 lib-net 模块的网络请求能力

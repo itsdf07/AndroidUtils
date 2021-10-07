@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import okhttp3.Interceptor;
-import top.itaso.lib.net.callback.IHeadParamsCallback;
 
 /**
  * @Description:
@@ -53,8 +52,13 @@ public class Configurator {
         checkConfiguration();//一切可获取的全局配置信息都需要基于全局配置过程已经完成才可以
         final Object value = CONFIGS.get(key);
         if (null == value) {
-            //没有配置对应信息时强行获取，则抛出空指针异常
-            throw new NullPointerException("正在获取的 " + key + " 并未被配置或者内容为 null，请重新检查配置内容");
+            if (ConfigKeys.INTERCEPTOR.name().equals(key)) {
+                return null;
+            } else {
+                //没有配置对应信息时强行获取，则抛出空指针异常
+                throw new NullPointerException("正在获取的 " + key + " 并未被配置或者内容为 null，请重新检查配置内容");
+            }
+
         }
         return (T) CONFIGS.get(key);
     }
@@ -71,13 +75,14 @@ public class Configurator {
     }
 
     /**
-     * params
+     * 设置拦截器
      *
-     * @param callback
+     * @param interceptors
      * @return
      */
-    public final Configurator withInterceptParams(IHeadParamsCallback callback) {
-        CONFIGS.put(ConfigKeys.INTERCEPTOR_PARAMS_HEADER.name(), callback);
+    public final Configurator withInterceptors(ArrayList<Interceptor> interceptors) {
+        INTERCEPTORS.addAll(interceptors);
+        CONFIGS.put(ConfigKeys.INTERCEPTOR.name(), INTERCEPTORS);
         return this;
     }
 
@@ -87,8 +92,10 @@ public class Configurator {
      * @param interceptors
      * @return
      */
-    public final Configurator withInterceptors(ArrayList<Interceptor> interceptors) {
-        INTERCEPTORS.addAll(interceptors);
+    public final Configurator withInterceptors(Interceptor... interceptors) {
+        for (Interceptor interceptor : interceptors) {
+            INTERCEPTORS.add(interceptor);
+        }
         CONFIGS.put(ConfigKeys.INTERCEPTOR.name(), INTERCEPTORS);
         return this;
     }
