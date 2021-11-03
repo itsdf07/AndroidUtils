@@ -15,7 +15,7 @@ import top.itaso.lib.net.NetInit
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        ALog.init().logLevel = ALogLevel.FULL
+        ALog.init().setLogLevel(ALogLevel.FULL).writeLog(this).writeCrash(this)
         NetInit.init(this)
             .withApiHost("https://cloudvc.tpv-tech.com")
             .showLog(true).configure()

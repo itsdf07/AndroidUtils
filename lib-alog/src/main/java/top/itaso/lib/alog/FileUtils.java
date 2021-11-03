@@ -10,6 +10,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
  */
 class FileUtils {
     private static final String TAG = FileUtils.class.getSimpleName();
+    public static boolean isWritePermission = true;
 
     public interface IFileComplateCallback {
         /**
@@ -859,6 +861,10 @@ class FileUtils {
      * @return {@code true}: 信息写入成功<br>{@code false}: 信息写入失败
      */
     private static boolean write2File(File file, byte[] aData, boolean append) {
+        if (!isWritePermission) {
+            Log.e(TAG, "write2File: [ALog-Content] Currently there is no write permission, you can only write after you request it and call ALog.init().resetWritePermissio(true) ");
+            return false;
+        }
         if (!createOrExistsFile(file)) {
             //写入文件不存在且创建失败时return false
             return false;
@@ -869,14 +875,18 @@ class FileUtils {
             out = new FileOutputStream(file, append);
             out.write(aData);
             ok = true;
+            isWritePermission = true;
+        } catch (FileNotFoundException fileNotFoundException) {
+            Log.e(TAG, "write2File: [ALog-Content] log write failure,msg=" + fileNotFoundException.getMessage());
+            isWritePermission = false;
         } catch (Exception e) {
-            Log.e(TAG, "log write failure:" + e.getMessage());
+            Log.e(TAG, "write2File: [ALog-Content] log write failure,msg=" + e.getMessage());
         } finally {
             if (out != null) {
                 try {
                     out.close();
                 } catch (IOException e) {
-                    Log.e(TAG, "OutputStream close failure:" + e.getMessage());
+                    Log.e(TAG, "write2File: [ALog-Content] OutputStream close failure:" + e.getMessage());
                 }
             }
         }

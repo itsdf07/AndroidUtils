@@ -76,7 +76,10 @@ class CrashHandler implements Thread.UncaughtExceptionHandler {
         mContext = context;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            Log.e(TAG, "init: >>>>>>Currently there is no write permission, you can only write after you request it no need to reinitialize it");
+            Log.e(TAG, "init: [ALog-Content] Currently there is no write permission, you can only write after you request it no need to reinitialize it");
+            FileUtils.isWritePermission = false;
+        } else {
+            FileUtils.isWritePermission = true;
         }
         //获取系统默认的UncaughtException处理器
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
@@ -126,6 +129,10 @@ class CrashHandler implements Thread.UncaughtExceptionHandler {
                 Looper.loop();
             }
         }.start();
+        if (!FileUtils.isWritePermission) {
+            Log.e(TAG, "handleException: [ALog-Content] Currently there is no write permission, you can only write after you request it and call ALog.init().resetWritePermissio(true) ");
+            return true;
+        }
         //控制日志文件数量
         limitAppLogCount();
         //保存日志文件
@@ -206,6 +213,9 @@ class CrashHandler implements Thread.UncaughtExceptionHandler {
                 fos.close();
             }
             return fileName;
+        } catch (FileNotFoundException fileNotFoundException) {
+            Log.e(TAG, "write2File: [ALog-Content] log write failure,msg=" + fileNotFoundException.getMessage());
+            FileUtils.isWritePermission = false;
         } catch (Exception e) {
             Log.e(TAG, "an error occured while writing file...", e);
         }

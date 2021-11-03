@@ -104,6 +104,10 @@ public final class ALogSettings {
         return isLog2Local;
     }
 
+    public void resetWritePermission(boolean isWritePermission) {
+        FileUtils.isWritePermission = isWritePermission;
+    }
+
     /**
      * 开启异常崩溃捕获
      *
@@ -140,9 +144,11 @@ public final class ALogSettings {
         this.isLog2Local = true;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            Log.e(TAG, "setLog2Local: >>>>>>Currently there is no write permission, you can only write after you request it no need to reinitialize it");
+            Log.e(TAG, "setLog2Local: [ALog-Content] Currently there is no write permission, you can only write after you request it no need to reinitialize it");
+            FileUtils.isWritePermission = false;
             return this;
         }
+        FileUtils.isWritePermission = true;
         return this;
     }
 
