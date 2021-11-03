@@ -8,6 +8,9 @@
 repair for blocking attempted file writes that have no write permission
 对ALog和Crash 修复了阻止无写入权限时的文件尝试写入
 
+ALog module support format JSON string for debugging
+ALog库支持 Json 字符串的格式化
+
 2021.10.7
 Allows to add interceptors
 允许添加多个自定义拦截器

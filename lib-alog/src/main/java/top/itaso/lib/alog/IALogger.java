@@ -74,6 +74,14 @@ interface IALogger {
     void wtf(String tag, Throwable throwable, String message, Object... args);
 
     /**
+     * 格式化并打印json内容
+     *
+     * @param json JSON传
+     */
+    void json(String json);
+
+
+    /**
      * Log打印内容封装
      *
      * @param tag       tag

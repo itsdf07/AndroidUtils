@@ -2,6 +2,10 @@ package top.itaso.lib.alog;
 
 import android.text.TextUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,6 +22,7 @@ import java.util.concurrent.Executors;
  */
 
 class ALoggerImpl implements IALogger {
+    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
     /**
      * 日期格式
      */
@@ -112,6 +117,32 @@ class ALoggerImpl implements IALogger {
     @Override
     public void wtf(String tag, Throwable throwable, String message, Object... args) {
         log(tag, ASSERT, throwable, message, args);
+    }
+
+    @Override
+    public void json(String json) {
+        if (TextUtils.isEmpty(json)) {
+            d(getALogSettings().getTag(), "Empty/Null json content");
+            return;
+        }
+        try {
+            json = json.trim();
+            if (json.startsWith("{")) {
+                JSONObject jsonObject = new JSONObject(json);
+                String message = jsonObject.toString(4);
+                d(getALogSettings().getTag(), LINE_SEPARATOR + message);
+                return;
+            }
+            if (json.startsWith("[")) {
+                JSONArray jsonArray = new JSONArray(json);
+                String message = jsonArray.toString(4);
+                d(getALogSettings().getTag(), LINE_SEPARATOR + message);
+                return;
+            }
+            e(getALogSettings().getTag(), null, "Invalid Json");
+        } catch (JSONException e) {
+            e(getALogSettings().getTag(), e, "Invalid Json");
+        }
     }
 
     @Override

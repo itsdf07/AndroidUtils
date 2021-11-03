@@ -109,4 +109,7 @@ public final class ALog {
         mALogger.wtf(tag, throwable, message, args);
     }
 
+    public static void json(String json) {
+        mALogger.json(json);
+    }
 }
