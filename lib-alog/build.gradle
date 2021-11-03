@@ -10,7 +10,7 @@ android {
         minSdkVersion rootProject.ext.android.minSdkVersion
         targetSdkVersion rootProject.ext.android.targetSdkVersion
         versionCode rootProject.ext.android.versionCode
-        versionName rootProject.ext.android.versionName
+        versionName "1.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -31,7 +31,7 @@ android {
     android.libraryVariants.all { variant ->
         variant.outputs.all {
             //输出目录：lib-alog/build/outputs/aar/
-            outputFileName = "lib-alog-${rootProject.ext.android.versionName}" + '.aar'
+            outputFileName = "lib-alog-${android.defaultConfig.versionName}" + '.aar'
         }
     }
 }
